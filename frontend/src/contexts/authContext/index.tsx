@@ -1,23 +1,26 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../../firebase/firebase";
-// import { GoogleAuthProvider } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 
 interface AuthContextValue {
   userLoggedIn: boolean;
   isEmailUser: boolean;
-  currentUser: null;
-  setCurrentUser: React.Dispatch<React.SetStateAction<null>>;
+  currentUser: any;
+  setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const AuthContext = React.createContext<AuthContextValue | null>(null);
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [isEmailUser, setIsEmailUser] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -27,13 +30,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-  async function initializeUser(user) {
+  async function initializeUser(user: any) {
     if (user) {
       setCurrentUser({ ...user });
 
-      // check if provider is email and password login
       const isEmail = user.providerData.some(
-        (provider) => provider.providerId === "password"
+        (provider: any) => provider.providerId === "password"
       );
       setIsEmailUser(isEmail);
 

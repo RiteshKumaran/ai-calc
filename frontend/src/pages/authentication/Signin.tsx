@@ -7,14 +7,14 @@ import {
 import { useAuth } from "@/contexts/authContext/index";
 
 const Login = () => {
-  const { userLoggedIn, user } = useAuth();
+  const { userLoggedIn } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     setErrorMessage(""); // Clear any previous error messages
 
@@ -22,10 +22,6 @@ const Login = () => {
       setIsSigningIn(true);
       try {
         await doSignInWithEmailAndPassword({ email, password });
-        if (!user.emailVerified) {
-          setErrorMessage("Please verify your email before logging in.");
-          // Optionally, you could trigger a resend email verification here
-        }
       } catch (error: any) {
         // Customize error message based on Firebase error codes
         if (error.code === "auth/user-not-found") {
@@ -42,7 +38,7 @@ const Login = () => {
     }
   };
 
-  const onGoogleSignIn = async (e) => {
+  const onGoogleSignIn = async (e: any) => {
     e.preventDefault();
     setErrorMessage("");
 

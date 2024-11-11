@@ -15,7 +15,7 @@ import Register from "./pages/authentication/Signup";
 import Privacy from "./pages/legal/Privacy";
 import NotFound from "./pages/404/NotFound";
 
-const ProtectedRoute = ({ element }) => {
+const ProtectedRoute = ({ element }: any) => {
   const { userLoggedIn } = useAuth();
   return userLoggedIn ? element : <Navigate to="/login" replace />;
 };

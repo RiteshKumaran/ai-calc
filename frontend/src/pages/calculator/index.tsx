@@ -32,7 +32,6 @@ export default function Calculator() {
   const [result, setResult] = useState<GeneratedResult>();
   const [latexPosition, setLatexPosition] = useState({ x: 10, y: 200 });
   const [latexExpression, setLatexExpression] = useState<Array<string>>([]);
-  const [theme, setTheme] = useState("dark");
 
   const [username, setUsername] = useState("");
 
@@ -285,7 +284,7 @@ export default function Calculator() {
           <Draggable
             key={index}
             defaultPosition={latexPosition}
-            onStop={(e, data) => setLatexPosition({ x: data.x, y: data.y })}
+            onStop={(_, data) => setLatexPosition({ x: data.x, y: data.y })}
           >
             <div className="absolute p-2 text-white rounded shadow-md">
               <div className="latex-content">{latex}</div>

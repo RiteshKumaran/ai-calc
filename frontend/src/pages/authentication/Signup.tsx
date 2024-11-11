@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/authContext/index";
 import { doCreateUserWithEmailAndPassword } from "@/firebase/auth";
@@ -16,7 +16,7 @@ const Register = () => {
 
   const { userLoggedIn } = useAuth();
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     setErrorMessage("");
 
