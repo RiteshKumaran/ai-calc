@@ -251,8 +251,21 @@ export default function Calculator() {
       });
     }
   };
+  const getBounds = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        left: 0,
+        top: 10,
+        right: rect.width - 170, // Adjust based on the size of the draggable element
+        bottom: rect.height - 50, // Adjust based on the size of the draggable element
+      };
+    }
+    return { left: 0, top: 0, right: 0, bottom: 0 };
+  };
   return (
-    <div className="bg-black">
+    <div className="bg-black overflow-hidden">
       <nav className="relative z-50">
         <div className="grid text-white p-5 items-center space-x-2">
           <div
@@ -263,11 +276,11 @@ export default function Calculator() {
           >
             <CalculatorIcon className="h-8 w-8 text-white" />
 
-            <span className="text-2xl ml-3 bg-gradient-to-r from-red-600 to-purple-400 text-transparent bg-clip-text font-bold ">
+            <span className="text-2xl ml-3 bg-gradient-to-r cursor-pointer from-red-600 to-purple-400 text-transparent bg-clip-text font-bold ">
               AI Calc
             </span>
           </div>
-          <div className="text-white text-center relative mt-5 text-4xl z-20">
+          <div className="text-white text-center relative  text-4xl z-20">
             Hello👋,{" "}
             {currentUser?.displayName ? currentUser.displayName : username}!
           </div>
@@ -327,13 +340,13 @@ export default function Calculator() {
           />
         </div>
       </div>
-      <div>
+      <div className="overflow-hidden">
         {latexExpression &&
           latexExpression.map((latex, index) => (
             <Draggable
               key={index}
               defaultPosition={latexPosition}
-              bounds={{ top: 0, left: 0 }}
+              bounds={getBounds()}
               onStop={(_, data) => {
                 setLatexPosition({ x: data.x, y: data.y });
               }}
@@ -347,7 +360,7 @@ export default function Calculator() {
         <canvas
           ref={canvasRef}
           id="canvas"
-          className="relative bg-black top-0 left-0 w-full h-full border-2 border-white mt-4 touch-none select-none"
+          className="relative overflow-hidden bg-black top-0 left-0 w-full h-full border-2 border-white mt-4 touch-none select-none"
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}

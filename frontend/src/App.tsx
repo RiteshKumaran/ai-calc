@@ -14,6 +14,7 @@ import Login from "./pages/authentication/Signin";
 import Register from "./pages/authentication/Signup";
 import Privacy from "./pages/legal/Privacy";
 import NotFound from "./pages/404/NotFound";
+import AboutPage from "./pages/about/About";
 
 const ProtectedRoute = ({ element }: any) => {
   const { userLoggedIn } = useAuth();
@@ -38,10 +39,7 @@ const paths = [
     element: <ProtectedRoute element={<Calculator />} />,
     // element: <Calculator />,
   },
-  {
-    path: "/home",
-    element: <Home />,
-  },
+
   {
     path: "/",
     element: <Home />,
@@ -49,6 +47,11 @@ const paths = [
   {
     path: "/privacy",
     element: <Privacy />,
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
+    // element: <Calculator />,
   },
 ];
 const BrowserRouter = createBrowserRouter(paths);

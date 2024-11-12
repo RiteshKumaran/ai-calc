@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -89,7 +89,7 @@ export default function Home() {
                           Lightning Fast
                         </h2>
                       </div>
-                      <p className="text-sm text-start text-slate-500">
+                      <p className="text-sm text-start text-white dark:text-slate-500">
                         Perform complex calculations in milliseconds with our
                         advanced AI algorithms. Say goodbye to manual
                         computations and hello to instant results.
@@ -123,7 +123,7 @@ export default function Home() {
                           Intelligent Suggestions
                         </h2>
                       </div>
-                      <p className="text-sm text-start text-slate-500">
+                      <p className="text-sm text-start text-white dark:text-slate-500">
                         Get smart recommendations and insights based on your
                         calculation history. Our AI learns from your usage
                         patterns to provide personalized suggestions.
@@ -157,7 +157,7 @@ export default function Home() {
                           Complex Calculations
                         </h2>
                       </div>
-                      <p className="text-sm text-start text-slate-500">
+                      <p className="text-sm text-start text-white dark:text-slate-500">
                         Solve complex mathematical problems with ease using our
                         advanced AI calculator. Perform intricate computations
                         in seconds.
@@ -282,7 +282,7 @@ export default function Home() {
               <ul className="space-y-2">
                 <li>
                   <a
-                    href="#"
+                    href="#features"
                     className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
                   >
                     Features
@@ -290,7 +290,7 @@ export default function Home() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="#pricing"
                     className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
                   >
                     Pricing
@@ -298,10 +298,10 @@ export default function Home() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="#faq"
                     className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
                   >
-                    API
+                    FAQ
                   </a>
                 </li>
               </ul>
@@ -317,22 +317,6 @@ export default function Home() {
                     About
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                  >
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                  >
-                    Careers
-                  </a>
-                </li>
               </ul>
             </div>
 
@@ -340,28 +324,12 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-4">Legal</h3>
               <ul className="space-y-2">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to={"/privacy"}
                     className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
                   >
                     Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                  >
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-                  >
-                    Cookie Policy
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

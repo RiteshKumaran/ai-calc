@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calculator, Moon, Sun } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/authContext";
 import { doSignOut } from "@/firebase/auth";
 interface Props {
@@ -11,6 +11,8 @@ interface Props {
 const Navbar = ({ onThemeChange }: Props) => {
   const { userLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [theme, setTheme] = useState("dark");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   useEffect(() => {
@@ -28,32 +30,45 @@ const Navbar = ({ onThemeChange }: Props) => {
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-black   border-b-[0.1px] border-black dark:border-gray-500">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <Calculator className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold bg-gradient-to-r from-red-700 to-purple-400 text-transparent bg-clip-text">
+        <div
+          onClick={() => navigate("/")}
+          className="flex items-center space-x-2"
+        >
+          <Calculator className="h-8 w-8 text-black dark:text-white" />
+          <span className="text-2xl cursor-pointer font-bold bg-gradient-to-r from-red-700 to-purple-400 text-transparent bg-clip-text">
             AI Calc
           </span>
         </div>
         <nav className="hidden text-black dark:text-white z-50 md:flex space-x-8">
-          <a
-            href="/home#features"
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            Features
-          </a>
+          {location.pathname === "/" && (
+            <>
+              <Link
+                className="text-sm font-medium hover:text-primary transition-colors"
+                to={"/about"}
+              >
+                About
+              </Link>
+              <a
+                href="#features"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Features
+              </a>
 
-          <a
-            href="/home#pricing"
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            Pricing
-          </a>
-          <a
-            href="/home#faq"
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            FAQ
-          </a>
+              <a
+                href="#pricing"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Pricing
+              </a>
+              <a
+                href="#faq"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                FAQ
+              </a>
+            </>
+          )}
         </nav>
         <div className="flex items-center space-x-4">
           <Button
@@ -111,7 +126,7 @@ const Navbar = ({ onThemeChange }: Props) => {
           )}
 
           <button
-            className="md:hidden"
+            className="md:hidden text-black dark:text-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -141,28 +156,39 @@ const Navbar = ({ onThemeChange }: Props) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden bg-white dark:bg-black border-b-[0.1px] border-black dark:border-gray-500"
+            className="md:hidden absolute w-full bg-white text-black dark:text-white dark:bg-black border-b-[0.1px] border-black dark:border-gray-500"
           >
             <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-              <Link
-                to={"/home#featurbvghes"}
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Features
-              </Link>
+              {location.pathname === "/" && (
+                <>
+                  {" "}
+                  <Link
+                    to={"#features"}
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    Features
+                  </Link>
+                  <Link
+                    to={"/about"}
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    About
+                  </Link>
+                  <a
+                    href="#pricing"
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    Pricing
+                  </a>
+                  <a
+                    href="#faq"
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    FAQ
+                  </a>
+                </>
+              )}
 
-              <a
-                href="#pricing"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Pricing
-              </a>
-              <a
-                href="#faq"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                FAQ
-              </a>
               {userLoggedIn ? (
                 <>
                   <Button
