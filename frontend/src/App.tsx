@@ -36,6 +36,7 @@ const paths = [
   {
     path: "/calculate",
     element: <ProtectedRoute element={<Calculator />} />,
+    // element: <Calculator />,
   },
   {
     path: "/home",
@@ -56,7 +57,7 @@ const App = () => {
   return (
     <AuthProvider>
       <MantineProvider>
-        <RouterProvider router={BrowserRouter}></RouterProvider>
+        <RouterProvider router={BrowserRouter} />
       </MantineProvider>
     </AuthProvider>
   );

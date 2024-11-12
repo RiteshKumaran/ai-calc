@@ -7,7 +7,7 @@ import { SWATCHES } from "@/constants";
 import { useAuth } from "@/contexts/authContext";
 import { doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 import { db } from "@/firebase/firebase";
-import { CalculatorIcon } from "lucide-react";
+import { CalculatorIcon, Eraser } from "lucide-react";
 
 // import {LazyBrush} from 'lazy-brush';
 
@@ -28,10 +28,13 @@ export default function Calculator() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("rgb(255, 255, 255)");
   const [reset, setReset] = useState(false);
+  const [eraserSize, setEraserSize] = useState(10); // Default eraser size
+
   const [dictOfVars, setDictOfVars] = useState({});
   const [result, setResult] = useState<GeneratedResult>();
   const [latexPosition, setLatexPosition] = useState({ x: 10, y: 200 });
   const [latexExpression, setLatexExpression] = useState<Array<string>>([]);
+  const [tool, setTool] = useState("draw"); // 'draw' or 'erase'
 
   const [username, setUsername] = useState("");
 
@@ -129,31 +132,62 @@ export default function Calculator() {
     }
   };
 
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current;
     if (canvas) {
-      canvas.style.background = "black";
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.beginPath();
-        ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        const { offsetX, offsetY } = getOffset(e);
+        ctx.moveTo(offsetX, offsetY);
         setIsDrawing(true);
       }
     }
   };
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) {
-      return;
-    }
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
+  // const draw = (e: React.MouseEvent | React.TouchEvent) => {
+  //   if (!isDrawing) return;
+  //   const canvas = canvasRef.current;
+  //   if (canvas) {
+  //     const ctx = canvas.getContext("2d");
+  //     if (ctx) {
+  //       ctx.strokeStyle = color;
+  //       const { offsetX, offsetY } = getOffset(e);
+  //       ctx.lineTo(offsetX, offsetY);
+  //       ctx.stroke();
+  //     }
+  //   }
+  // };
+  const draw = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDrawing) return;
+    const ctx = canvasRef.current?.getContext("2d");
+    if (ctx) {
+      if (tool === "draw") {
         ctx.strokeStyle = color;
-        ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        const { offsetX, offsetY } = getOffset(e);
+        ctx.lineTo(offsetX, offsetY);
+        ctx.stroke();
+      } else if (tool === "erase") {
+        ctx.strokeStyle = "black"; // Assuming the canvas background is black
+        ctx.lineWidth = 10; // Adjust the eraser size as needed
+        ctx.lineWidth = eraserSize;
+        const { offsetX, offsetY } = getOffset(e);
+        ctx.lineTo(offsetX, offsetY);
         ctx.stroke();
       }
     }
+  };
+
+  const getOffset = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasRef.current!;
+    const rect = canvas.getBoundingClientRect();
+    const isTouch = (e as React.TouchEvent).touches;
+    const offsetX = isTouch
+      ? isTouch[0].clientX - rect.left
+      : (e as React.MouseEvent).nativeEvent.offsetX;
+    const offsetY = isTouch
+      ? isTouch[0].clientY - rect.top
+      : (e as React.MouseEvent).nativeEvent.offsetY;
+    return { offsetX, offsetY };
   };
   const stopDrawing = () => {
     setIsDrawing(false);
@@ -217,9 +251,8 @@ export default function Calculator() {
       });
     }
   };
-
   return (
-    <>
+    <div className="bg-black">
       <nav className="relative z-50">
         <div className="grid text-white p-5 items-center space-x-2">
           <div
@@ -236,7 +269,7 @@ export default function Calculator() {
           </div>
           <div className="text-white text-center relative mt-5 text-4xl z-20">
             Hello👋,{" "}
-            {currentUser.displayName ? currentUser.displayName : username}!
+            {currentUser?.displayName ? currentUser.displayName : username}!
           </div>
         </div>
       </nav>
@@ -251,12 +284,16 @@ export default function Calculator() {
         >
           Reset
         </Button>
+
         <Group className="z-20 mx-5">
           {SWATCHES.map((swatch) => (
             <ColorSwatch
               key={swatch}
               color={swatch}
-              onClick={() => setColor(swatch)}
+              onClick={() => {
+                setColor(swatch);
+                setTool("draw");
+              }}
             />
           ))}
         </Group>
@@ -269,28 +306,57 @@ export default function Calculator() {
           Calculate
         </Button>
       </div>
-      <canvas
-        ref={canvasRef}
-        id="canvas"
-        className="absolute overflow-y-auto bg-black top-0 left-0 w-full h-full"
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseOut={stopDrawing}
-      />
+      <div className="p-5 gap-2 flex justify-center ">
+        <Eraser className="text-white" onClick={() => setTool("erase")} />
 
-      {latexExpression &&
-        latexExpression.map((latex, index) => (
-          <Draggable
-            key={index}
-            defaultPosition={latexPosition}
-            onStop={(_, data) => setLatexPosition({ x: data.x, y: data.y })}
-          >
-            <div className="absolute p-2 text-white rounded shadow-md">
-              <div className="latex-content">{latex}</div>
-            </div>
-          </Draggable>
-        ))}
-    </>
+        <div className="flex items-center">
+          <label htmlFor="eraserSize" className="text-white mr-2">
+            Size:
+          </label>
+          <input
+            type="range"
+            id="eraserSize"
+            min="1"
+            max="50"
+            value={eraserSize}
+            onChange={(e: any) => {
+              setEraserSize(e.target.value);
+              setTool("erase");
+            }}
+            className="z-20"
+          />
+        </div>
+      </div>
+      <div>
+        {latexExpression &&
+          latexExpression.map((latex, index) => (
+            <Draggable
+              key={index}
+              defaultPosition={latexPosition}
+              bounds={{ top: 0, left: 0 }}
+              onStop={(_, data) => {
+                setLatexPosition({ x: data.x, y: data.y });
+              }}
+            >
+              <div className="absolute  p-2 z-50 text-white rounded shadow-md">
+                <div className="latex-content absolute z-50">{latex}</div>
+              </div>
+            </Draggable>
+          ))}
+
+        <canvas
+          ref={canvasRef}
+          id="canvas"
+          className="relative bg-black top-0 left-0 w-full h-full border-2 border-white mt-4 touch-none select-none"
+          onMouseDown={startDrawing}
+          onMouseMove={draw}
+          onMouseUp={stopDrawing}
+          onMouseOut={stopDrawing}
+          onTouchEnd={stopDrawing}
+          onTouchStart={startDrawing}
+          onTouchMove={draw}
+        />
+      </div>
+    </div>
   );
 }
