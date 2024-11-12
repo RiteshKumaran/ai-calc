@@ -161,19 +161,19 @@ const Navbar = ({ onThemeChange }: Props) => {
             <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
               {location.pathname === "/" && (
                 <>
-                  {" "}
-                  <Link
-                    to={"#features"}
-                    className="text-sm font-medium hover:text-primary transition-colors"
-                  >
-                    Features
-                  </Link>
                   <Link
                     to={"/about"}
                     className="text-sm font-medium hover:text-primary transition-colors"
                   >
                     About
                   </Link>
+                  <Link
+                    to={"#features"}
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    Features
+                  </Link>
+
                   <a
                     href="#pricing"
                     className="text-sm font-medium hover:text-primary transition-colors"
